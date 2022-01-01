@@ -28,5 +28,5 @@ Route::prefix('/organizations')
     ->name('organizations.')
     ->middleware('auth:sanctum')
     ->group(function () {
-        Route::get('/interests', [InterestController::class, 'index']);
+        Route::get('/interests', [InterestController::class, 'index'])->name('interests.index');
     });
