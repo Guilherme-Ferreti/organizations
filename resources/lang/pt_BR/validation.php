@@ -123,6 +123,8 @@ return [
     'uploaded'             => 'Falha no Upload do arquivo :attribute.',
     'url'                  => 'O formato da URL informada para o campo :attribute é inválido.',
     'uuid'                 => 'O campo :attribute deve ser um UUID válido.',
+    'existing_interest_name'        => 'O valor informado deve ser um interesse válido.',
+    'active_organization_member'    => 'O usuário informado deve ser um membro ativo da organização.', 
     'custom'               => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
@@ -161,5 +163,15 @@ return [
         'title'                 => 'título',
         'username'              => 'usuário',
         'year'                  => 'ano',
+
+        // Organization fields
+        'corporate_name'        => 'razão social',
+        'fantasy_name'          => 'nome fantasia',
+        'domain'                => 'domínio',
+        'cpf_cnpj'              => 'CPF/CNPJ',
+        'logo'                  => 'logo',
+        'social_contract'       => 'contrato social',
+        'organization_type'     => 'tipo de organização',
+        'interests'             => 'interesses',
     ],
 ];

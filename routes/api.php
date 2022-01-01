@@ -1,9 +1,10 @@
 <?php
 
-use App\Domains\Organization\Controllers\InterestController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Domains\Organization\Controllers\InterestController;
+use App\Domains\Organization\Controllers\OrganizationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,11 +23,13 @@ Route::prefix('/auth')
         Route::post('/register', [AuthController::class, 'register'])->name('register');
         Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
-});
+    });
 
 Route::prefix('/organizations')
     ->name('organizations.')
     ->middleware('auth:sanctum')
     ->group(function () {
         Route::get('/interests', [InterestController::class, 'index'])->name('interests.index');
+
+        Route::post('/', [OrganizationController::class, 'store'])->name('store');
     });

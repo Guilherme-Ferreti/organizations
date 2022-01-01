@@ -139,6 +139,8 @@ return [
     | specify a specific custom language line for a given attribute rule.
     |
     */
+    'existing_interest_name'        => 'The provided value must be a valid interest name.',
+    'active_organization_member'    => 'The provided user must be an active member of the organization.', 
 
     'custom' => [
         'attribute-name' => [
