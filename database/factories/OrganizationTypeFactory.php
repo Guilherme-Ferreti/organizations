@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Domains\Organization\Models\Interest;
+use App\Domains\Organization\Models\OrganizationType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class InterestFactory extends Factory
+class OrganizationTypeFactory extends Factory
 {
-    protected $model = Interest::class;
+    protected $model = OrganizationType::class;
 
     /**
      * Define the model's default state.
