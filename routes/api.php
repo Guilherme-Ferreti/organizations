@@ -32,4 +32,5 @@ Route::prefix('/organizations')
         Route::get('/interests', [InterestController::class, 'index'])->name('interests.index');
 
         Route::post('/', [OrganizationController::class, 'store'])->name('store');
+        Route::put('/{organization:uuid}', [OrganizationController::class, 'update'])->name('update');
     });
