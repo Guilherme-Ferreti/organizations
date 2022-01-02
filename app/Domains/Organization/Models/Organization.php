@@ -4,9 +4,9 @@ namespace App\Domains\Organization\Models;
 
 use App\Models\User;
 use App\Traits\Uuid;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Organization extends Model
 {
@@ -19,13 +19,19 @@ class Organization extends Model
         'cpf_cnpj',
         'logo',
         'social_contract',
-        'organization_type',
+        'organization_type_id',
         'interests',
     ];
 
     protected $casts = [
-        'interests' => 'array',
+        'interests'             => 'array',
+        'organization_type_id'  => 'integer',
     ];
+
+    public function organization_type()
+    {
+        return $this->belongsTo(OrganizationType::class);
+    }
 
     public function members()
     {

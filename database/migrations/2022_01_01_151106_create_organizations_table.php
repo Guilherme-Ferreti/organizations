@@ -22,7 +22,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('cpf_cnpj', 14)->unique();
             $table->string('logo')->nullable();
             $table->string('social_contract')->nullable();
-            $table->unsignedTinyInteger('organization_type')->constrained();
+            $table->unsignedTinyInteger('organization_type_id')->constrained();
             $table->json('interests')->nullable();
             $table->timestamps();
             $table->softDeletes();

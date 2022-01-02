@@ -33,14 +33,14 @@ class OrganizationTest extends TestCase
         Sanctum::actingAs($user);
 
         $payload = [
-            'fantasy_name'      => 'My Organization',
-            'corporate_name'    => 'My Organization SA',
-            'domain'            => 'organization',
-            'cpf_cnpj'          => '65692965000138',
-            'logo'              => UploadedFile::fake()->image('logo.png'),
-            'social_contract'   => UploadedFile::fake()->image('social_contract.png'),
-            'organization_type' => $organization_type->id,
-            'interests'         => [$interest->name],
+            'fantasy_name'          => 'My Organization',
+            'corporate_name'        => 'My Organization SA',
+            'domain'                => 'organization',
+            'cpf_cnpj'              => '65692965000138',
+            'logo'                  => UploadedFile::fake()->image('logo.png'),
+            'social_contract'       => UploadedFile::fake()->image('social_contract.png'),
+            'organization_type_id'  => $organization_type->id,
+            'interests'             => [$interest->name],
         ];
 
         $this->post(route('organizations.store'), $payload)

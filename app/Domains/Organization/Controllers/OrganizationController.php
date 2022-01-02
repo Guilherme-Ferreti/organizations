@@ -13,15 +13,15 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'fantasy_name'      => ['required', 'string', 'max:255'],
-            'corporate_name'    => ['required', 'string', 'max:255', 'unique:organizations'],
-            'domain'            => ['nullable', 'string', 'max:255', 'alpha_num', 'unique:organizations'],
-            'cpf_cnpj'          => ['required', 'string', 'max:14', 'unique:organizations'],
-            'logo'              => ['nullable', 'image'],
-            'social_contract'   => ['nullable', 'image'],
-            'organization_type' => ['required', 'integer', 'exists:organization_types,id'],
-            'interests'         => ['nullable', 'array'],
-            'interests.*'       => ['string', new ExistingInterestName]
+            'fantasy_name'          => ['required', 'string', 'max:255'],
+            'corporate_name'        => ['required', 'string', 'max:255', 'unique:organizations'],
+            'domain'                => ['nullable', 'string', 'max:255', 'alpha_num', 'unique:organizations'],
+            'cpf_cnpj'              => ['required', 'string', 'max:14', 'unique:organizations'],
+            'logo'                  => ['nullable', 'image'],
+            'social_contract'       => ['nullable', 'image'],
+            'organization_type_id'  => ['required', 'integer', 'exists:organization_types,id'],
+            'interests'             => ['nullable', 'array'],
+            'interests.*'           => ['string', new ExistingInterestName]
         ]);
 
         if ($request->file('logo')?->isValid()) {
