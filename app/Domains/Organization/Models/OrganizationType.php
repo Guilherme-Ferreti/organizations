@@ -3,8 +3,8 @@
 namespace App\Domains\Organization\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Database\Factories\OrganizationTypeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Database\Factories\Domains\Organization\OrganizationTypeFactory;
 
 class OrganizationType extends Model
 {

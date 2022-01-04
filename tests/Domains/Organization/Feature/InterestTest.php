@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Domains\Organization\Feature;
 
-use App\Domains\Organization\Models\Interest;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Artisan;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Foundation\Testing\WithFaker;
+use App\Domains\Organization\Models\Interest;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class InterestTest extends TestCase
 {

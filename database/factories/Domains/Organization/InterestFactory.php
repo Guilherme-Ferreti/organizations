@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Domains\Organization;
 
 use App\Domains\Organization\Models\Interest;
 use Illuminate\Database\Eloquent\Factories\Factory;

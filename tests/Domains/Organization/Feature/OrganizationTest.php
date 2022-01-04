@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Domains\Organization\Feature;
 
 use Tests\TestCase;
 use App\Models\User;
@@ -9,10 +9,10 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Domains\Organization\Models\Interest;
+use Illuminate\Testing\Fluent\AssertableJson;
 use App\Domains\Organization\Models\Organization;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Domains\Organization\Models\OrganizationType;
-use Illuminate\Testing\Fluent\AssertableJson;
 
 class OrganizationTest extends TestCase
 {

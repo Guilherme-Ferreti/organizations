@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Domains\Organization;
 
-use App\Domains\Organization\Models\OrganizationType;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Domains\Organization\Models\OrganizationType;
 
 class OrganizationTypeFactory extends Factory
 {
