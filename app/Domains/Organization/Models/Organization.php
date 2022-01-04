@@ -4,6 +4,7 @@ namespace App\Domains\Organization\Models;
 
 use App\Models\User;
 use App\Traits\Uuid;
+use Database\Factories\OrganizationFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,7 +36,14 @@ class Organization extends Model
 
     public function members()
     {
-        return $this->belongsToMany(User::class, 'organization_user')->withTimestamps();
+        return $this->belongsToMany(User::class, 'organization_user')
+            ->using(OrganizationUser::class)
+            ->withPivot([
+                'is_technical_manager',
+                'is_owner',
+                'is_active',
+            ])
+            ->withTimestamps();
     }
 
     public function activeMembers()
@@ -58,12 +66,27 @@ class Organization extends Model
         return $this->activeOwners()->get()->contains($user);
     }
 
-    public function addMember(User $user, bool $is_technical_manager = false, bool $is_owner = false): void
+    public function addMember(User $user, bool $is_technical_manager = false, bool $is_owner = false, bool $is_active = true): void
     {
         $this->members()->attach($user->id, [
             'is_technical_manager' => $is_technical_manager,
             'is_owner' => $is_owner,
+            'is_active' => $is_active,
         ]);
+    }
+
+    public function updateMember(User $user, bool $is_technical_manager = false, bool $is_owner = false, bool $is_active = true): void
+    {
+        $this->members()->updateExistingPivot($user, [
+            'is_technical_manager' => $is_technical_manager,
+            'is_owner' => $is_owner,
+            'is_active' => $is_active,
+        ]);
+    }
+
+    public function removeMember(User $user): void
+    {
+        $this->members()->detach($user);
     }
 
     public function transferOwnership(int|User $owner, int|User $new_owner): void
@@ -79,5 +102,10 @@ class Organization extends Model
         ]);
 
         DB::commit();
+    }
+
+    protected static function newFactory()
+    {
+        return OrganizationFactory::new();
     }
 }

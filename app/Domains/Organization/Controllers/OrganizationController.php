@@ -46,14 +46,15 @@ class OrganizationController extends Controller
         $this->authorize('update', $organization);
         
         $attributes = $request->validate([
-            'fantasy_name'      => ['string', 'max:255'],
-            'corporate_name'    => ['string', 'max:255', Rule::unique('organizations')->ignore($organization)],
-            'domain'            => ['nullable', 'string', 'max:255', 'alpha_num', Rule::unique('organizations')->ignore($organization)],
-            'cpf_cnpj'          => ['string', 'max:14', Rule::unique('organizations')->ignore($organization)],
-            'logo'              => ['nullable', 'image'],
-            'social_contract'   => ['nullable', 'image'],
-            'organization_type' => ['integer', 'exists:organization_types,id'],
-            'interests'         => ['nullable', 'array', new ExistingInterestName],
+            'fantasy_name'          => ['string', 'max:255'],
+            'corporate_name'        => ['string', 'max:255', Rule::unique('organizations')->ignore($organization)],
+            'domain'                => ['nullable', 'string', 'max:255', 'alpha_num', Rule::unique('organizations')->ignore($organization)],
+            'cpf_cnpj'              => ['string', 'max:14', Rule::unique('organizations')->ignore($organization)],
+            'logo'                  => ['nullable', 'image'],
+            'social_contract'       => ['nullable', 'image'],
+            'organization_type_id'  => ['integer', 'exists:organization_types,id'],
+            'interests'             => ['nullable', 'array'],
+            'interests.*'           => ['string', new ExistingInterestName],
         ]);
 
         if ($request->file('logo')?->isValid()) {
