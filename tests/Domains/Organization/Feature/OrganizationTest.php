@@ -152,21 +152,62 @@ class OrganizationTest extends TestCase
         $organization = Organization::factory()->create();
         $route = route('organizations.update', $organization);
 
-        $this->put($route, [])->assertUnauthorized();
+        $this->put($route)->assertUnauthorized();
 
         Sanctum::actingAs($user);
-        $this->put($route, [])->assertForbidden();
+        $this->put($route)->assertForbidden();
 
         $organization->addMember($user);
-        $this->put($route, [])->assertForbidden();
+        $this->put($route)->assertForbidden();
 
         $organization->updateMember($user, is_technical_manager: true);
-        $this->put($route, [])->assertForbidden();
+        $this->put($route)->assertForbidden();
 
         $organization->updateMember($user, is_owner: true, is_active: false);
-        $this->put($route, [])->assertForbidden();
+        $this->put($route)->assertForbidden();
 
         $organization->updateMember($user, is_owner: true, is_active: true);
-        $this->put($route, [])->assertOk();
+        $this->put($route)->assertOk();
+    }
+    
+    public function test_only_active_owners_can_delete_the_organization()
+    {
+        $user = User::factory()->create();
+        $organization = Organization::factory()->create();
+        $route = route('organizations.destroy', $organization);
+
+        $this->delete($route)->assertUnauthorized();
+
+        Sanctum::actingAs($user);
+        $this->delete($route)->assertForbidden();
+
+        $organization->addMember($user);
+        $this->delete($route)->assertForbidden();
+
+        $organization->updateMember($user, is_technical_manager: true);
+        $this->delete($route)->assertForbidden();
+
+        $organization->updateMember($user, is_owner: true, is_active: false);
+        $this->delete($route)->assertForbidden();
+
+        $organization->updateMember($user, is_owner: true, is_active: true);
+        $this->delete($route)->assertNoContent();
+    }
+
+    public function test_an_organization_can_be_deleted()
+    {
+        $user = User::factory()->create();
+        $organization = Organization::factory()->create();
+
+        $organization->addMember($user, is_owner: true);
+
+        Sanctum::actingAs($user);
+
+        $this->delete(route('organizations.destroy', $organization))
+            ->assertNoContent();
+
+        $this->assertSoftDeleted(Organization::class, [
+            'id' => $organization->id,
+        ]);
     }
 }

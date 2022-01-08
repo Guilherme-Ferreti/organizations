@@ -35,6 +35,7 @@ Route::prefix('/organizations')
         Route::post('/', [OrganizationController::class, 'store'])->name('store');
         Route::get('/{organization:uuid}', [OrganizationController::class, 'show'])->name('show');
         Route::put('/{organization:uuid}', [OrganizationController::class, 'update'])->name('update');
+        Route::delete('/{organization:uuid}', [OrganizationController::class, 'destroy'])->name('destroy');
 
         Route::post('/{organization:uuid}/members', [OrganizationMemberController::class, 'store'])->name('members.store');
     });

@@ -86,4 +86,13 @@ class OrganizationController extends Controller
 
         return (new OrganizationResource($organization));
     }
+
+    public function destroy(Organization $organization)
+    {
+        $this->authorize('delete', $organization);
+
+        $organization->delete();
+
+        return $this->respondNoContent();
+    }
 }

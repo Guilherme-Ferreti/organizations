@@ -19,22 +19,22 @@ class OrganizationMemberTest extends TestCase
         $organization = Organization::factory()->create();
         $route = route('organizations.members.store', $organization);
 
-        $this->post($route, [])->assertUnauthorized();
+        $this->post($route)->assertUnauthorized();
 
         Sanctum::actingAs($user);
-        $this->post($route, [])->assertForbidden();
+        $this->post($route)->assertForbidden();
 
         $organization->addMember($user);
-        $this->post($route, [])->assertForbidden();
+        $this->post($route)->assertForbidden();
 
         $organization->updateMember($user, is_technical_manager: true);
-        $this->post($route, [])->assertForbidden();
+        $this->post($route)->assertForbidden();
 
         $organization->updateMember($user, is_owner: true, is_active: false);
-        $this->post($route, [])->assertForbidden();
+        $this->post($route)->assertForbidden();
 
         $organization->updateMember($user, is_owner: true, is_active: true);
-        $this->post($route, [])->assertUnprocessable();
+        $this->post($route)->assertUnprocessable();
     }
 
     public function test_an_member_can_be_added_to_an_organization()
