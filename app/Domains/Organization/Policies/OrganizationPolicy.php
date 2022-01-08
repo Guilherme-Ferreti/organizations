@@ -24,4 +24,9 @@ class OrganizationPolicy
     {
         return $organization->isActiveOwner($user);
     }
+
+    public function transferOwnership(User $user, Organization $organization)
+    {
+        return $organization->isActiveOwner($user);
+    }
 }

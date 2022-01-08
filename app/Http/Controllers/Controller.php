@@ -23,7 +23,7 @@ class Controller extends BaseController
         return response()->json($data, Response::HTTP_CREATED);
     }
 
-    protected function respondOk(array $data): JsonResponse
+    protected function respondOk(array $data = []): JsonResponse
     {
         return response()->json($data);
     }

@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Domains\Organization\Models\Organization;
 use App\Domains\Organization\Rules\NonOrganizationMemberRule;
+use App\Domains\Organization\Rules\ActiveOrganizationMemberRule;
 
 class OrganizationMemberController extends Controller
 {
@@ -16,7 +17,7 @@ class OrganizationMemberController extends Controller
 
         $attributes = $request->validate([
             'user_id' => [
-                'required', 'integer', Rule::exists('users', 'id')->where('deleted_at', null),
+                'bail', 'required', 'integer', Rule::exists('users', 'id')->whereNull('deleted_at'),
                 new NonOrganizationMemberRule($organization)
             ],
             'is_technical_manager' => ['boolean'],
@@ -30,5 +31,21 @@ class OrganizationMemberController extends Controller
         );
 
         return $this->respondCreated();
+    }
+
+    public function transferOwnership(Request $request, Organization $organization)
+    {
+        $this->authorize('transferOwnership', $organization);
+
+        $attributes = $request->validate([
+            'user_id' => [
+                'bail', 'required', 'integer', Rule::exists('users', 'id')->whereNull('deleted_at'),
+                new ActiveOrganizationMemberRule($organization)
+            ],
+        ]);
+
+        $organization->transferOwnership($request->user(), $attributes['user_id']);
+
+        return $this->respondOk();
     }
 }

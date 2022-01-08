@@ -61,4 +61,77 @@ class OrganizationMemberTest extends TestCase
 
         $this->assertDatabaseHas(OrganizationUser::class, $payload);
     }
+
+    public function test_only_active_owners_can_transfer_an_onganization_ownership()
+    {
+        $user = User::factory()->create();
+        $organization = Organization::factory()->create();
+        $route = route('organizations.members.transfer_ownership', $organization);
+
+        $this->patch($route)->assertUnauthorized();
+
+        Sanctum::actingAs($user);
+        $this->patch($route)->assertForbidden();
+
+        $organization->addMember($user);
+        $this->patch($route)->assertForbidden();
+
+        $organization->updateMember($user, is_technical_manager: true);
+        $this->patch($route)->assertForbidden();
+
+        $organization->updateMember($user, is_owner: true, is_active: false);
+        $this->patch($route)->assertForbidden();
+
+        $organization->updateMember($user, is_owner: true, is_active: true);
+        $this->patch($route)->assertUnprocessable();
+    }
+
+    public function test_an_organization_ownership_can_be_transfered_only_to_another_active_member()
+    {
+        $organization = Organization::factory()->create();
+        $owner = User::factory()->create();
+        $user = User::factory()->create();
+
+        $organization->addMember($owner, is_owner: true);
+
+        Sanctum::actingAs($owner);
+
+        $this->patchJson(route('organizations.members.transfer_ownership', $organization), [
+            'user_id' => $user->id,
+        ])->assertUnprocessable();
+
+        $organization->addMember($user, is_active: false);
+
+        $this->patchJson(route('organizations.members.transfer_ownership', $organization), [
+            'user_id' => $user->id,
+        ])->assertUnprocessable();
+    }
+
+    public function test_an_owner_can_transfer_an_organization_ownership()
+    {
+        $organization = Organization::factory()->create();
+        $owner = User::factory()->create();
+        $member = User::factory()->create();
+
+        $organization->addMember($owner, is_owner: true);
+        $organization->addMember($member);
+
+        Sanctum::actingAs($owner);
+
+        $this->patchJson(route('organizations.members.transfer_ownership', $organization), [
+            'user_id' => $member->id,
+        ])->assertOk();
+
+        $this->assertDatabaseHas(OrganizationUser::class, [
+            'organization_id' => $organization->id,
+            'user_id' => $member->id,
+            'is_owner' => true,
+        ]);
+        
+        $this->assertDatabaseHas(OrganizationUser::class, [
+            'organization_id' => $organization->id,
+            'user_id' => $owner->id,
+            'is_owner' => false,
+        ]);
+    }
 }

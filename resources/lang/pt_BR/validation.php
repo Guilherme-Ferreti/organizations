@@ -126,6 +126,7 @@ return [
     'existing_interest_name'        => 'O valor informado deve ser um interesse válido.',
     'active_organization_member'    => 'O usuário informado deve ser um membro ativo da organização.', 
     'non_organization_member'       => 'O usuário informado não deve ser um membro da organização.', 
+    'active_organization_member'    => 'O usuário informado deve ser um membro ativo da organização.', 
     'custom'               => [
         'attribute-name' => [
             'rule-name' => 'custom-message',

@@ -4,6 +4,7 @@ namespace App\Domains\Organization\Models;
 
 use App\Models\User;
 use App\Traits\Uuid;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
