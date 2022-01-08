@@ -33,6 +33,7 @@ Route::prefix('/organizations')
         Route::get('/interests', [InterestController::class, 'index'])->name('interests.index');
 
         Route::post('/', [OrganizationController::class, 'store'])->name('store');
+        Route::get('/{organization:uuid}', [OrganizationController::class, 'show'])->name('show');
         Route::put('/{organization:uuid}', [OrganizationController::class, 'update'])->name('update');
 
         Route::post('/{organization:uuid}/members', [OrganizationMemberController::class, 'store'])->name('members.store');

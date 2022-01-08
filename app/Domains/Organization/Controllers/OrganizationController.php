@@ -12,6 +12,13 @@ use App\Domains\Organization\Resources\OrganizationResource;
 
 class OrganizationController extends Controller
 {
+    public function show(Organization $organization)
+    {
+        $organization->load('members');
+        
+        return new OrganizationResource($organization);
+    }
+
     public function store(Request $request)
     {
         $attributes = $request->validate([

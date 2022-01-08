@@ -21,6 +21,7 @@ class OrganizationResource extends JsonResource
             'organization_type' => $this->organization_type,
             'interests'         => $this->interests,
             'registered_date'   => $this->created_at,
+            'members'           => MemberResource::collection($this->whenLoaded('members')),
         ];
     }
 }
