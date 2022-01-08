@@ -7,13 +7,14 @@ use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\WithFaker;
 use App\Domains\Organization\Models\Organization;
+use App\Domains\Organization\Models\OrganizationUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class OrganizationMemberTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_only_active_onwers_can_add_members_to_an_onganization()
+    public function test_only_active_owners_can_add_members_to_an_onganization()
     {
         $user = User::factory()->create();
         $organization = Organization::factory()->create();
@@ -58,6 +59,6 @@ class OrganizationMemberTest extends TestCase
 
         $payload['organization_id'] = $organization->id;
 
-        $this->assertDatabaseHas('organization_user', $payload);
+        $this->assertDatabaseHas(OrganizationUser::class, $payload);
     }
 }

@@ -13,6 +13,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use App\Domains\Organization\Models\Organization;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Domains\Organization\Models\OrganizationType;
+use App\Domains\Organization\Models\OrganizationUser;
 
 class OrganizationTest extends TestCase
 {
@@ -89,8 +90,8 @@ class OrganizationTest extends TestCase
         $payload['logo'] = $payload['logo']->hashName('organizations/logos');
         $payload['social_contract'] = $payload['social_contract']->hashName('organizations/social_contracts');
 
-        $this->assertDatabaseHas('organizations', $payload);
-        $this->assertDatabaseHas('organization_user', [
+        $this->assertDatabaseHas(Organization::class, $payload);
+        $this->assertDatabaseHas(OrganizationUser::class, [
            'organization_id'        => 1,
            'user_id'                => $user->id,
            'is_owner'               => true,
@@ -140,7 +141,7 @@ class OrganizationTest extends TestCase
         $payload['logo'] = $payload['logo']->hashName('organizations/logos');
         $payload['social_contract'] = $payload['social_contract']->hashName('organizations/social_contracts');
 
-        $this->assertDatabaseHas('organizations', $payload);
+        $this->assertDatabaseHas(Organization::class, $payload);
 
         Storage::disk('public')
             ->assertExists([$payload['logo'], $payload['social_contract']]);
