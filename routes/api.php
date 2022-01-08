@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Domains\Organization\Controllers\InterestController;
 use App\Domains\Organization\Controllers\OrganizationController;
 use App\Domains\Organization\Controllers\OrganizationMemberController;
+use App\Domains\Organization\Controllers\OrganizationTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,7 @@ Route::prefix('/organizations')
     ->middleware('auth:sanctum')
     ->group(function () {
         Route::get('/interests', [InterestController::class, 'index'])->name('interests.index');
+        Route::get('/types', [OrganizationTypeController::class, 'index'])->name('types.index');
 
         Route::post('/', [OrganizationController::class, 'store'])->name('store');
         Route::get('/{organization:uuid}', [OrganizationController::class, 'show'])->name('show');
