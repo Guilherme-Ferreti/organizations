@@ -17,7 +17,7 @@ class MemberResource extends JsonResource
         return [
             'name'                  => $this->name,
             'is_owner'              => $this->pivot->is_owner,
-            'is_techinical_manager' => $this->pivot->is_techinical_manager,
+            'is_technical_manager'  => $this->pivot->is_technical_manager,
             'is_active'             => $this->pivot->is_active,
         ];
     }

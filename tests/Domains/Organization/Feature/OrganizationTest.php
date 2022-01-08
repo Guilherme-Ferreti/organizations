@@ -18,6 +18,35 @@ class OrganizationTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_an_organization_can_be_visualized()
+    {
+        $organization = Organization::factory()->create();
+        $user = User::factory()->create();
+
+        $organization->addMember($user, is_owner: true);
+        $organization->addMember(User::factory()->create(), is_technical_manager: true);
+
+        Sanctum::actingAs($user);
+
+        $this->get(route('organizations.show', $organization))
+            ->assertOk()
+            ->assertJson(fn (AssertableJson $json) => 
+                $json->has('organization', fn (AssertableJson $json) => 
+                    $json->hasAll([
+                        'uuid', 'fantasy_name', 'corporate_name', 'domain', 
+                        'cpf_cnpj', 'logo', 'social_contract', 'organization_type',
+                        'interests', 'registered_date',
+                    ])
+                    ->has('members', 2, fn (AssertableJson $json) => 
+                        $json->where('name', $user->name)
+                            ->where('is_owner', true)
+                            ->where('is_technical_manager', false)
+                            ->where('is_active', true)
+                    )
+                )
+            );
+    }
+
     public function test_a_user_must_be_loged_in_to_create_an_organization()
     {
         $this->postJson(route('organizations.store'))
