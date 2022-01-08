@@ -14,4 +14,9 @@ class OrganizationPolicy
     {
         return $organization->isActiveOwner($user);
     }
+
+    public function addMembers(User $user, Organization $organization)
+    {
+        return $organization->isActiveOwner($user);
+    }
 }

@@ -66,9 +66,9 @@ class Organization extends Model
         return $this->activeOwners()->get()->contains($user);
     }
 
-    public function addMember(User $user, bool $is_technical_manager = false, bool $is_owner = false, bool $is_active = true): void
+    public function addMember(int|User $user, bool $is_technical_manager = false, bool $is_owner = false, bool $is_active = true): void
     {
-        $this->members()->attach($user->id, [
+        $this->members()->attach($user, [
             'is_technical_manager' => $is_technical_manager,
             'is_owner' => $is_owner,
             'is_active' => $is_active,

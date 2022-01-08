@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Domains\Organization\Controllers\InterestController;
 use App\Domains\Organization\Controllers\OrganizationController;
+use App\Domains\Organization\Controllers\OrganizationMemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +34,6 @@ Route::prefix('/organizations')
 
         Route::post('/', [OrganizationController::class, 'store'])->name('store');
         Route::put('/{organization:uuid}', [OrganizationController::class, 'update'])->name('update');
+
+        Route::post('/{organization:uuid}/members', [OrganizationMemberController::class, 'store'])->name('members.store');
     });

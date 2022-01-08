@@ -141,6 +141,7 @@ return [
     */
     'existing_interest_name'        => 'The provided value must be a valid interest name.',
     'active_organization_member'    => 'The provided user must be an active member of the organization.', 
+    'non_organization_member'       => 'The provided user must not be an member of the organization.', 
 
     'custom' => [
         'attribute-name' => [
