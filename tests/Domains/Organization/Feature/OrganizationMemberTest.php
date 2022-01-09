@@ -20,22 +20,7 @@ class OrganizationMemberTest extends TestCase
         $organization = Organization::factory()->create();
         $route = route('organizations.members.store', $organization);
 
-        $this->post($route)->assertUnauthorized();
-
-        Sanctum::actingAs($user);
-        $this->post($route)->assertForbidden();
-
-        $organization->addMember($user);
-        $this->post($route)->assertForbidden();
-
-        $organization->updateMember($user, is_technical_manager: true);
-        $this->post($route)->assertForbidden();
-
-        $organization->updateMember($user, is_owner: true, is_active: false);
-        $this->post($route)->assertForbidden();
-
-        $organization->updateMember($user, is_owner: true, is_active: true);
-        $this->post($route)->assertUnprocessable();
+        $this->authorizationAssertions($user, $organization, $route, 'post');
     }
 
     public function test_an_member_can_be_added_to_an_organization()
@@ -93,19 +78,7 @@ class OrganizationMemberTest extends TestCase
 
         $route = route('organizations.members.destroy', [$organization, $member]);
 
-        $this->delete($route)->assertUnauthorized();
-
-        Sanctum::actingAs($user);
-        $this->delete($route)->assertForbidden();
-
-        $organization->addMember($user);
-        $this->delete($route)->assertForbidden();
-
-        $organization->updateMember($user, is_technical_manager: true);
-        $this->delete($route)->assertForbidden();
-
-        $organization->updateMember($user, is_owner: true, is_active: false);
-        $this->delete($route)->assertForbidden();
+        $this->authorizationAssertions($user, $organization, $route, 'delete');
     }
 
     public function test_an_owner_cannot_be_removed_from_an_organization()
@@ -129,22 +102,7 @@ class OrganizationMemberTest extends TestCase
         $organization = Organization::factory()->create();
         $route = route('organizations.members.transfer_ownership', $organization);
 
-        $this->patch($route)->assertUnauthorized();
-
-        Sanctum::actingAs($user);
-        $this->patch($route)->assertForbidden();
-
-        $organization->addMember($user);
-        $this->patch($route)->assertForbidden();
-
-        $organization->updateMember($user, is_technical_manager: true);
-        $this->patch($route)->assertForbidden();
-
-        $organization->updateMember($user, is_owner: true, is_active: false);
-        $this->patch($route)->assertForbidden();
-
-        $organization->updateMember($user, is_owner: true, is_active: true);
-        $this->patch($route)->assertUnprocessable();
+        $this->authorizationAssertions($user, $organization, $route, 'patch');
     }
 
     public function test_an_organization_ownership_can_be_transfered_only_to_another_active_member()
@@ -194,5 +152,22 @@ class OrganizationMemberTest extends TestCase
             'user_id' => $owner->id,
             'is_owner' => false,
         ]);
+    }
+
+    private function authorizationAssertions(User $user, Organization $organization, string $route, string $method)
+    {
+        $this->{$method}($route)->assertUnauthorized();
+
+        Sanctum::actingAs($user);
+        $this->{$method}($route)->assertForbidden();
+
+        $organization->addMember($user);
+        $this->{$method}($route)->assertForbidden();
+
+        $organization->updateMember($user, is_technical_manager: true);
+        $this->{$method}($route)->assertForbidden();
+
+        $organization->updateMember($user, is_owner: true, is_active: false);
+        $this->{$method}($route)->assertForbidden();
     }
 }
