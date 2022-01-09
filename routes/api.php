@@ -40,5 +40,6 @@ Route::prefix('/organizations')
         Route::delete('/{organization:uuid}', [OrganizationController::class, 'destroy'])->name('destroy');
 
         Route::post('/{organization:uuid}/members', [OrganizationMemberController::class, 'store'])->name('members.store');
+        Route::delete('/{organization:uuid}/members/{member}', [OrganizationMemberController::class, 'destroy'])->name('members.destroy');
         Route::patch('/{organization:uuid}/members/transfer-ownership', [OrganizationMemberController::class, 'transferOwnership'])->name('members.transfer_ownership');
     });

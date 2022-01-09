@@ -25,6 +25,11 @@ class OrganizationPolicy
         return $organization->isActiveOwner($user);
     }
 
+    public function removeMembers(User $user, Organization $organization, User $member)
+    {
+        return $organization->isActiveOwner($user) && ! $organization->isActiveOwner($member);
+    }
+
     public function transferOwnership(User $user, Organization $organization)
     {
         return $organization->isActiveOwner($user);

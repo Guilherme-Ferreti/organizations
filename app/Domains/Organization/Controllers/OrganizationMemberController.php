@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Domains\Organization\Models\Organization;
 use App\Domains\Organization\Rules\NonOrganizationMemberRule;
 use App\Domains\Organization\Rules\ActiveOrganizationMemberRule;
+use App\Models\User;
 
 class OrganizationMemberController extends Controller
 {
@@ -31,6 +32,15 @@ class OrganizationMemberController extends Controller
         );
 
         return $this->respondCreated();
+    }
+
+    public function destroy(Organization $organization, User $member)
+    {
+        $this->authorize('removeMembers', [$organization, $member]);
+
+        $organization->removeMember($member);
+
+        return $this->respondNoContent();
     }
 
     public function transferOwnership(Request $request, Organization $organization)

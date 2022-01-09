@@ -85,7 +85,7 @@ class Organization extends Model
         ]);
     }
 
-    public function removeMember(User $user): void
+    public function removeMember(int|User $user): void
     {
         $this->members()->detach($user);
     }
