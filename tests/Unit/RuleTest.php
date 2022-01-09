@@ -45,10 +45,10 @@ class RuleTest extends TestCase
 
         $this->assertTrue(Validator::make($data, $rules)->fails());
 
-        $organization->addMember($user, is_active: false);
+        $organization->addMember($user, ['is_active' => false]);
         $this->assertTrue(Validator::make($data, $rules)->fails());
         
-        $organization->updateMember($user, is_active: true);
+        $organization->updateMember($user, ['is_active' => true]);
         $this->assertFalse(Validator::make($data, $rules)->fails());
     }
     

@@ -24,8 +24,8 @@ class OrganizationTest extends TestCase
         $organization = Organization::factory()->create();
         $user = User::factory()->create();
 
-        $organization->addMember($user, is_owner: true);
-        $organization->addMember(User::factory()->create(), is_technical_manager: true);
+        $organization->addMember($user, ['is_owner' => true]);
+        $organization->addMember(User::factory()->create(), ['is_technical_manager' => true]);
 
         Sanctum::actingAs($user);
 
@@ -109,7 +109,7 @@ class OrganizationTest extends TestCase
         $user = User::factory()->create();
         $organization = Organization::factory()->create();
 
-        $organization->addMember($user, is_owner: true);
+        $organization->addMember($user, ['is_owner' => true]);
 
         Storage::fake('public');
         Sanctum::actingAs($user);
@@ -161,13 +161,13 @@ class OrganizationTest extends TestCase
         $organization->addMember($user);
         $this->put($route)->assertForbidden();
 
-        $organization->updateMember($user, is_technical_manager: true);
+        $organization->updateMember($user, ['is_technical_manager' => true]);
         $this->put($route)->assertForbidden();
 
-        $organization->updateMember($user, is_owner: true, is_active: false);
+        $organization->updateMember($user, ['is_owner' => true, 'is_active' => false]);
         $this->put($route)->assertForbidden();
 
-        $organization->updateMember($user, is_owner: true, is_active: true);
+        $organization->updateMember($user, ['is_owner' => true, 'is_active' => true]);
         $this->put($route)->assertOk();
     }
     
@@ -185,13 +185,13 @@ class OrganizationTest extends TestCase
         $organization->addMember($user);
         $this->delete($route)->assertForbidden();
 
-        $organization->updateMember($user, is_technical_manager: true);
+        $organization->updateMember($user, ['is_technical_manager' => true]);
         $this->delete($route)->assertForbidden();
 
-        $organization->updateMember($user, is_owner: true, is_active: false);
+        $organization->updateMember($user, ['is_owner' => true, 'is_active' => false]);
         $this->delete($route)->assertForbidden();
 
-        $organization->updateMember($user, is_owner: true, is_active: true);
+        $organization->updateMember($user, ['is_owner' => true, 'is_active' => true]);
         $this->delete($route)->assertNoContent();
     }
 
@@ -200,7 +200,7 @@ class OrganizationTest extends TestCase
         $user = User::factory()->create();
         $organization = Organization::factory()->create();
 
-        $organization->addMember($user, is_owner: true);
+        $organization->addMember($user, ['is_owner' => true]);
 
         Sanctum::actingAs($user);
 

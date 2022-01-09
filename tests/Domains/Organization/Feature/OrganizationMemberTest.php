@@ -27,7 +27,7 @@ class OrganizationMemberTest extends TestCase
     {
         $user = User::factory()->create();
         $organization = Organization::factory()->create();
-        $organization->addMember($user, is_owner: true);
+        $organization->addMember($user, ['is_owner' => true]);
 
         $member = User::factory()->create();
 
@@ -47,24 +47,44 @@ class OrganizationMemberTest extends TestCase
         $this->assertDatabaseHas(OrganizationUser::class, $payload);
     }
 
-    public function test_an_member_can_be_removed_from_an_organization()
+    public function test_only_active_owners_can_update_members_of_an_organization()
     {
         $user = User::factory()->create();
         $member = User::factory()->create();
         $organization = Organization::factory()->create();
 
-        $organization->addMember($user, is_owner: true);
+        $organization->addMember($user);
+        $organization->addMember($member);
+
+        $route = route('organizations.members.update', [$organization, $member]);
+
+        $this->authorizationAssertions($user, $organization, $route, 'put');
+    }
+
+    public function test_an_member_of_an_organization_can_be_updated()
+    {
+        $user = User::factory()->create();
+        $member = User::factory()->create();
+        $organization = Organization::factory()->create();
+
+        $organization->addMember($user, ['is_owner' => true]);
         $organization->addMember($member);
 
         Sanctum::actingAs($user);
 
-        $this->delete(route('organizations.members.destroy', [$organization, $member]))
-            ->assertNoContent();
+        $payload = [
+            'is_owner' => true,
+            'is_technical_manager' => true,
+            'is_active' => false,
+        ];
 
-        $this->assertDatabaseMissing(OrganizationUser::class, [
-            'organization_id' => $organization->id,
-            'user_id' => $member->id,
-        ]);
+        $this->putJson(route('organizations.members.update', [$organization, $member]), $payload)
+            ->assertOk();
+
+        $payload['organization_id'] = $organization->id;
+        $payload['user_id'] = $member->id;
+
+        $this->assertDatabaseHas(OrganizationUser::class, $payload);
     }
 
     public function test_only_active_owners_can_remove_members_from_an_organization()
@@ -73,8 +93,8 @@ class OrganizationMemberTest extends TestCase
         $member = User::factory()->create();
         $organization = Organization::factory()->create();
 
-        $organization->addMember($user, is_owner: true);
-        $organization->addMember($member, is_owner: true);
+        $organization->addMember($user);
+        $organization->addMember($member);
 
         $route = route('organizations.members.destroy', [$organization, $member]);
 
@@ -87,13 +107,33 @@ class OrganizationMemberTest extends TestCase
         $member = User::factory()->create();
         $organization = Organization::factory()->create();
 
-        $organization->addMember($user, is_owner: true);
-        $organization->addMember($member, is_owner: true);
+        $organization->addMember($user, ['is_owner' => true]);
+        $organization->addMember($member, ['is_owner' => true]);
 
         Sanctum::actingAs($user);
 
         $this->delete(route('organizations.members.destroy', [$organization, $member]))
             ->assertForbidden();
+    }
+
+    public function test_an_member_can_be_removed_from_an_organization()
+    {
+        $user = User::factory()->create();
+        $member = User::factory()->create();
+        $organization = Organization::factory()->create();
+
+        $organization->addMember($user, ['is_owner' => true]);
+        $organization->addMember($member);
+
+        Sanctum::actingAs($user);
+
+        $this->delete(route('organizations.members.destroy', [$organization, $member]))
+            ->assertNoContent();
+
+        $this->assertDatabaseMissing(OrganizationUser::class, [
+            'organization_id' => $organization->id,
+            'user_id' => $member->id,
+        ]);
     }
 
     public function test_only_active_owners_can_transfer_an_organization_ownership()
@@ -111,7 +151,7 @@ class OrganizationMemberTest extends TestCase
         $owner = User::factory()->create();
         $user = User::factory()->create();
 
-        $organization->addMember($owner, is_owner: true);
+        $organization->addMember($owner, ['is_owner' => true]);
 
         Sanctum::actingAs($owner);
 
@@ -119,7 +159,7 @@ class OrganizationMemberTest extends TestCase
             'user_id' => $user->id,
         ])->assertUnprocessable();
 
-        $organization->addMember($user, is_active: false);
+        $organization->addMember($user, ['is_active' => false]);
 
         $this->patchJson(route('organizations.members.transfer_ownership', $organization), [
             'user_id' => $user->id,
@@ -132,7 +172,7 @@ class OrganizationMemberTest extends TestCase
         $owner = User::factory()->create();
         $member = User::factory()->create();
 
-        $organization->addMember($owner, is_owner: true);
+        $organization->addMember($owner, ['is_owner' => true]);
         $organization->addMember($member);
 
         Sanctum::actingAs($owner);
@@ -164,10 +204,10 @@ class OrganizationMemberTest extends TestCase
         $organization->addMember($user);
         $this->{$method}($route)->assertForbidden();
 
-        $organization->updateMember($user, is_technical_manager: true);
+        $organization->updateMember($user, ['is_technical_manager' => true]);
         $this->{$method}($route)->assertForbidden();
 
-        $organization->updateMember($user, is_owner: true, is_active: false);
+        $organization->updateMember($user, ['is_owner' => true, 'is_active' => false]);
         $this->{$method}($route)->assertForbidden();
     }
 }

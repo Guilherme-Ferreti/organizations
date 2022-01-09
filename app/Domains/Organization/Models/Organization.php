@@ -4,6 +4,7 @@ namespace App\Domains\Organization\Models;
 
 use App\Models\User;
 use App\Traits\Uuid;
+use Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -67,22 +68,18 @@ class Organization extends Model
         return $this->activeOwners()->get()->contains($user);
     }
 
-    public function addMember(int|User $user, bool $is_technical_manager = false, bool $is_owner = false, bool $is_active = true): void
+    public function addMember(int|User $user, array $attributes = []): void
     {
-        $this->members()->attach($user, [
-            'is_technical_manager' => $is_technical_manager,
-            'is_owner' => $is_owner,
-            'is_active' => $is_active,
-        ]);
+        $attributes = Arr::only($attributes, ['is_technical_manager', 'is_owner', 'is_active']);
+
+        $this->members()->attach($user, $attributes);
     }
 
-    public function updateMember(User $user, bool $is_technical_manager = false, bool $is_owner = false, bool $is_active = true): void
+    public function updateMember(User $user, array $attributes): void
     {
-        $this->members()->updateExistingPivot($user, [
-            'is_technical_manager' => $is_technical_manager,
-            'is_owner' => $is_owner,
-            'is_active' => $is_active,
-        ]);
+        $attributes = Arr::only($attributes, ['is_technical_manager', 'is_owner', 'is_active']);
+
+        $this->members()->updateExistingPivot($user, $attributes);
     }
 
     public function removeMember(int|User $user): void

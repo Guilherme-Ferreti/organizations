@@ -43,7 +43,7 @@ class OrganizationController extends Controller
 
         $organization = Organization::create($attributes);
         
-        $organization->addMember($request->user(), is_owner: true);
+        $organization->addMember($request->user(), ['is_owner' => true]);
 
         return $this->respondCreated(new OrganizationResource($organization));
     }
