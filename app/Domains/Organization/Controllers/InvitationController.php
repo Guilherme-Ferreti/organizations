@@ -3,9 +3,9 @@
 namespace App\Domains\Organization\Controllers;
 
 use App\Models\User;
-use App\Models\Invitation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Domains\Organization\Models\Invitation;
 use App\Domains\Organization\Models\Organization;
 use App\Domains\Organization\Rules\NonOrganizationMemberRule;
 use App\Domains\Organization\Notifications\InvitationNotification;

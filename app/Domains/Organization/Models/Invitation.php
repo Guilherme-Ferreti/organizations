@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Domains\Organization\Models;
 
 use Wildside\Userstamps\Userstamps;
 use App\Traits\BelongsToOrganization;

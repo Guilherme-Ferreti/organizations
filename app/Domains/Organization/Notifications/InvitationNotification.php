@@ -2,12 +2,12 @@
 
 namespace App\Domains\Organization\Notifications;
 
-use App\Domains\Organization\Models\Organization;
-use App\Models\Invitation;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Domains\Organization\Models\Invitation;
+use App\Domains\Organization\Models\Organization;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class InvitationNotification extends Notification
 {
