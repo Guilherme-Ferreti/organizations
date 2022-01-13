@@ -5,8 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Domains\Organization\Controllers\InterestController;
 use App\Domains\Organization\Controllers\OrganizationController;
-use App\Domains\Organization\Controllers\OrganizationMemberController;
 use App\Domains\Organization\Controllers\OrganizationTypeController;
+use App\Domains\Organization\Controllers\OrganizationMemberController;
+use App\Domains\Organization\Controllers\InvitationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +44,6 @@ Route::prefix('/organizations')
         Route::put('/{organization:uuid}/members/{member}', [OrganizationMemberController::class, 'update'])->name('members.update');
         Route::delete('/{organization:uuid}/members/{member}', [OrganizationMemberController::class, 'destroy'])->name('members.destroy');
         Route::patch('/{organization:uuid}/members/transfer-ownership', [OrganizationMemberController::class, 'transferOwnership'])->name('members.transfer_ownership');
+       
+        Route::post('/{organization:uuid}/invitations', [InvitationController::class, 'store'])->name('invitations.store');
     });
