@@ -143,6 +143,7 @@ return [
     'active_organization_member'    => 'The provided user must be an active member of the organization.', 
     'non_organization_member'       => 'The provided user must not be an member of the organization.', 
     'active_organization_member'    => 'The provided user must be an active member of the organization.', 
+    'missing_invitation'            => 'The provided user already has an invitation.',
     
     'custom' => [
         'attribute-name' => [

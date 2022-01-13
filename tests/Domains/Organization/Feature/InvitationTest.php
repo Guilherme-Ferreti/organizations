@@ -25,6 +25,24 @@ class InvitationTest extends TestCase
         $this->authorizationAssertions($user, $organization, $route, 'post');
     }
 
+    public function test_a_user_with_already_invited_cannot_be_invited_again()
+    {
+        $owner = User::factory()->create();
+        $organization = Organization::factory()->create();
+        $organization->addMember($owner, ['is_owner' => true]);
+
+        $user = User::factory()->create();
+        
+        $organization->invitations()->create(['user_id' => $user->id]);
+
+        Sanctum::actingAs($owner);
+
+        $payload['invitations'][0]['user_id'] = $user->id;
+
+        $this->postJson(route('organizations.invitations.store', $organization), $payload)
+            ->assertUnprocessable();
+    }
+
     public function test_invitations_can_be_send()
     {
         $users = User::factory(5)->create();

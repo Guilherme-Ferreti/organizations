@@ -9,6 +9,7 @@ use App\Domains\Organization\Models\Invitation;
 use App\Domains\Organization\Models\Organization;
 use App\Domains\Organization\Rules\NonOrganizationMemberRule;
 use App\Domains\Organization\Notifications\InvitationNotification;
+use App\Domains\Organization\Rules\MissingInvitationRule;
 
 class InvitationController extends Controller
 {
@@ -18,11 +19,12 @@ class InvitationController extends Controller
 
         $attributes = $request->validate([
             'invitations'           => ['required', 'array'],
-            'invitations.*.user_id' => ['required', 'integer', 'distinct', 'exists:users,id', new NonOrganizationMemberRule($organization)],
+            'invitations.*.user_id' => [
+                'required', 'integer', 'distinct', 'exists:users,id', 
+                new NonOrganizationMemberRule($organization), new MissingInvitationRule($organization)
+            ],
         ]);
 
-        // TODO: Make validation rule for asssuring that the user wasn't invited yet.
-        
         foreach ($attributes['invitations'] as $invitation) {
             $invitation = Invitation::create($invitation);
 

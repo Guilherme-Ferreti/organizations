@@ -9,7 +9,9 @@ trait BelongsToOrganization
     protected static function bootBelongsToOrganization()
     {
         static::creating(function ($model) {
-            $model->organization_id = request()->organization->id;
+            if (request()->organization) {
+                $model->organization_id = request()->organization->id;
+            }
         });
     }
 
