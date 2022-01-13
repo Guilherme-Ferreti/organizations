@@ -25,7 +25,7 @@ class InvitationTest extends TestCase
         $this->authorizationAssertions($user, $organization, $route, 'post');
     }
 
-    public function test_a_user_with_already_invited_cannot_be_invited_again()
+    public function test_a_user_already_invited_cannot_be_invited_again()
     {
         $owner = User::factory()->create();
         $organization = Organization::factory()->create();
@@ -43,7 +43,7 @@ class InvitationTest extends TestCase
             ->assertUnprocessable();
     }
 
-    public function test_invitations_can_be_send()
+    public function test_invitations_can_be_sent()
     {
         $users = User::factory(5)->create();
 
